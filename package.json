@@ -1,0 +1,15 @@
+{
+  "name": "aula73",
+  "version": "1.0.0",
+  "description": "Todo list",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "nodemon": "npm start"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
