@@ -1,15 +1,9 @@
 class UsuarioModel {
-    constructor(nome, id) {
-        this._nome = nome;
-        this._id = id;
-    }
-
-    get nome() {
-        return this._nome; 
-    }
-
-    get id() {
-        return this._id;
+    constructor(id, nome, email, senha) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
     }
 }
 

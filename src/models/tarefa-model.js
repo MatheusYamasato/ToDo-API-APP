@@ -1,21 +1,11 @@
 class TarefaModel {
-    constructor(data, nome, prioridade, status) {
-        this._data = data;
-        this._nome = nome;
-        this._prioridade = prioridade;
-        this._status = status;
-    }
-
-    get data() {
-        return this._data; 
-    }
-
-    get nome() {
-        return this._nome; 
-    }
-
-    get prioridade() {
-        return this._prioridade; 
+    constructor(id, titulo, descricao, status, datacriacao, email) {
+        this.id = id;
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.status = status;
+        this.datacriacao = datacriacao;
+        this.email = email;
     }
 }
 
