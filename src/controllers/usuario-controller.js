@@ -1,21 +1,21 @@
 const UsuarioModel = require('../models/usuario-model.js')
+const UsuarioDAO = require('../DAO/usuarios-dao')
 
 function usuarioController(app, bd) {
-    app.post('/usuario', (req, res) => {
-        const body = req.body
-        const usuario = new UsuarioModel(body.nome, body.id, body.email)
-        bd.usuario.push(usuario)
-        res.send(usuario)
+    
+    const DAO = new UsuarioDAO(bd)
+    app.get('/usuario', (req, res) => {
+        DAO.listarUsuarios()
+            .then((usuarios) => res.send(usuarios))
+            .catch((err) => res.send(`Erro: ${err} na consulta`))
     })
 
-    app.get('/usuario', (req, res) => {
-        bd.all("SELECT * FROM USUARIOS", (err, rows) => {
-            if(err) {
-                throw new Error(`Deu ${err}`)
-            } else {
-                res.send(rows)
-            }
-        })
+    app.post('/usuario', (req, res) => {
+        const body = req.body
+        const usuario = new UsuarioModel(0, body.nome, body.email, body.senha)
+        DAO.insereUsuario(usuario)
+            .then((usuario) => res.send(usuario))
+            .catch((err) => res.send(`${err}`))
     })
 
     app.get('/usuario/:email', (req, res) => {

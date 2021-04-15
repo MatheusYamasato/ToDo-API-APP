@@ -1,23 +1,22 @@
 const TarefaModel = require('../models/tarefa-model.js');
+const TarefasDAO = require('../DAO/tarefas-dao');
 
 function tarefaController(app, bd) {
+    
+    const DAO = new TarefasDAO(bd)
+    app.get('/tarefas', (req, res) => {
+        DAO.listarTarefas()
+            .then((tarefas) => res.send(usuarios))
+            .catch((err) => res.send(err))
+    })
+    
     app.post('/tarefas', (req, res) => {
         const body = req.body;
         const tarefa = new TarefaModel(body.data, body.nome, body.prioridade, body.status);
         bd.tarefas.push(tarefa)
         res.send(tarefa)
     })
-
-    app.get('/tarefas', (req, res) => {
-        bd.all("SELECT * FROM TAREFAS", (err, rows) => {
-            if(err) {
-                throw new Error(`Deu ${err}`)
-            } else {
-                res.send(rows)
-            }
-        })
-    })
-
+    
     app.get('/tarefas/:nome', (req, res) => {
         const nome = req.params.nome;
         const tarefas = bd.tarefas;
