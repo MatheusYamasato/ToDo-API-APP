@@ -8,11 +8,8 @@ module.exports = class TarefasDAO {
         return new Promise((res, rej) => {
             this.bd.all('SELECT * FROM TAREFAS',
             (err, tarefas) => {
-                if(err) {
-                    rej(err)
-                } else {
-                    res(tarefas)
-                }
+                if(err) rej(err)     
+                else res(tarefas) 
             })
 
         } 
@@ -20,22 +17,19 @@ module.exports = class TarefasDAO {
 
     insereTarefa(tarefa) {
         return new Promise((res, rej) => {
-            this.bd.run('INSERT INTO TAREFAS (TITULO, DESCRICAO, STATUS, DATACRIACAO) VALUES (?,?,?,?)'
-            , [tarefa.titulo, tarefa.descricao, tarefa.status, tarefa.datacriacao]
+            this.bd.run('INSERT INTO TAREFAS (TITULO, DESCRICAO, STATUS, DATACRIACAO, ID_USUARIO) VALUES (?,?,?,?,?)'
+            , [tarefa.titulo, tarefa.descricao, tarefa.status, tarefa.datacriacao, tarefa.id_usuario]
             , (err) => {
-                if(err) {
-                    rej('Falha ao inserir tarefa')
-                } else {
-                    res('Tarefa inserida com sucesso')
-                }
+                if(err) rej('Falha ao inserir tarefa')
+                else res('Tarefa inserida com sucesso')
             })
         })
     }
 
-    alterarTarefa(tarefa) {
+    alterarTarefa(tarefa, body) {
         return new Promise((res, rej) => {
-            this.bd.run('UPDATE TAREFAS SET (TITULO, DESCRICAO, STATUS) = (?, ?, ?) WHERE (TITULO, DESCRICAO, STATUS) = (?, ?, ?)'
-            , [tarefa.titulo, tarefas.descricao, tarefas.status]
+            this.bd.run('UPDATE TAREFAS SET DESCRICAO = (?), STATUS = (?) WHERE TITULO = (?)'
+            , [body.descricao, body.status, tarefa ]
             , (err) => {
                 if(err) rej('Falha ao alterar a tarefa')
                 else res('Tarefa alterada com sucesso')
@@ -45,8 +39,8 @@ module.exports = class TarefasDAO {
 
     deletarTarefa(tarefa) {
         return new Promise((res, rej) => {
-            this.bd.run('DELETE FROM TAREFAS WHERE (TITULO) = (?)'
-            , [tarefa.titulo]
+            this.bd.run('DELETE FROM TAREFAS WHERE TITULO = (?)'
+            , [tarefa]
             , (err) => {
                 if(err) rej('Falha ao deletar a tarefa')
                 else res('Tarefa deletada com sucesso')

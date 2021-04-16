@@ -10,6 +10,13 @@ function usuarioController(app, bd) {
             .catch((err) => res.send(`Erro: ${err} na consulta`))
     })
 
+    app.get('/usuario/:email', (req, res) => {
+        const email = req.params.email
+        DAO.listarApenasUmUsuario(email)
+            .then((usuario) => res.send(usuario))
+            .catch((err) => res.send(err))
+    })
+
     app.post('/usuario', (req, res) => {
         const body = req.body
         const usuario = new UsuarioModel(0, body.nome, body.email, body.senha)
@@ -18,44 +25,19 @@ function usuarioController(app, bd) {
             .catch((err) => res.send(`${err}`))
     })
 
-    app.get('/usuario/:email', (req, res) => {
-        const email = req.params.email;
-        const usuarios = bd.usuario;
-
-        usuarios.forEach((usuario) => {
-            console.log(usuario);
-            if(email === usuario.email) {
-                return res.send(usuario)
-            } else {
-                res.send("E-mail não encontrado")
-            }
-        })  
-    })
-
     app.delete( '/usuario/:email', (req, res) => {
         const email = req.params.email;
-        const usuarios = bd.usuario;
-        usuarios.forEach(usuario => {
-            if(email === usuario.email) {
-                usuarios.splice(usuarios.indexOf(usuario), 1)
-                return res.send("Usuario deletado")
-            } else {
-                res.send("Usuario não encontrado")
-            }
-        })
+        DAO.deletarUsuario(email)
+            .then((usuario) => res.send(usuario))
+            .catch((err) => res.send(`${err}`))
     })
 
     app.put('/usuario/:email', (req, res) => {
-        const email = req.params.email;
-        const usuarios = bd.usuario;
-        usuarios.forEach(usuario => {
-            if(email === usuario.email) {
-                usuario.email = req.body.email;
-                return res.send(usuario)
-            } else {
-                res.send("Usuario não encontrado")
-            }
-        })
+        const email = req.params.email
+        const body = req.body
+        DAO.alterarUsuario(email, body)
+            .then((usuario) => res.send(usuario))
+            .catch((err) => res.send(err))
     })
 }
 

@@ -6,15 +6,17 @@ function tarefaController(app, bd) {
     const DAO = new TarefasDAO(bd)
     app.get('/tarefas', (req, res) => {
         DAO.listarTarefas()
-            .then((tarefas) => res.send(usuarios))
+            .then((tarefas) => res.send(tarefas))
             .catch((err) => res.send(err))
     })
     
     app.post('/tarefas', (req, res) => {
-        const body = req.body;
-        const tarefa = new TarefaModel(body.data, body.nome, body.prioridade, body.status);
-        bd.tarefas.push(tarefa)
-        res.send(tarefa)
+        const body = req.body
+        const tarefa = new TarefaModel(0, body.titulo, body.descricao, body.status, body.datacriacao, body.id_usuario)
+        console.log(tarefa);
+        DAO.insereTarefa(tarefa)
+            .then((tarefas) => res.send(tarefas))
+            .catch((err) => res.send(err))
     })
     
     app.get('/tarefas/:nome', (req, res) => {
@@ -23,38 +25,24 @@ function tarefaController(app, bd) {
 
         tarefas.forEach((tarefa) => {
             console.log(tarefa);
-            if(nome === tarefa.nome) {
-                return res.send(tarefa)
-            } else {
-                res.send("E-mail não encontrado")
-            }
+            if(nome === tarefa.nome) return res.send(tarefa)
+            else res.send("E-mail não encontrado")
         })  
     })
 
-    app.delete('/tarefas/:nome', (req, res) => {
-        const nome = req.params.nome;
-        const array = bd.tarefas;
-        array.forEach(elemento => {
-            if(nome === elemento.nome) {
-                array.splice(array.indexOf(elemento), 1)
-                res.send("Usuario deletado")
-            } else {
-                res.send("Usuario não encontrado")
-            }
-        })
+    app.delete('/tarefas/:titulo', (req, res) => {
+        const titulo = req.params.titulo
+        DAO.deletarTarefa(titulo)
+            .then((mensagemSucesso) => res.status(201).send(mensagemSucesso))
+            .catch((mensagemErro) => res.send(mensagemErro))
     })
 
-    app.put('/tarefas/:nome', (req, res) => {
-        const nome = req.params.nome
-        const array = bd.tarefas;
-        array.forEach(tarefa => {
-            if(nome === tarefa.nome) {
-                tarefa.nome = req.body.nome;
-                return res.send(tarefa)
-            } else {
-                res.send("Usuario não encontrado")
-            }
-        })
+    app.put('/tarefas/:titulo', (req, res) => {
+        const titulo = req.params.titulo
+        const body = req.body
+        DAO.alterarTarefa(titulo, body)
+            .then((tarefa) => res.send(tarefa))
+            .catch((err) => res.send(err))
     })
 }
 

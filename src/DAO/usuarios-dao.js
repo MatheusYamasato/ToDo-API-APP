@@ -8,15 +8,22 @@ module.exports = class UsuariosDAO {
         return new Promise((res, rej) => {
             this.bd.all('SELECT * FROM USUARIOS',
             (err, usuarios) => {
-                if(err) {
-                    rej(err)
-                } else {
-                    res(usuarios)
-                }
+                if(err) rej(err)
+                else res(usuarios)
             })
-
         } 
     )}
+
+    listarApenasUmUsuario(email) {
+        return new Promise((res, rej) => {
+            this.bd.all("SELECT * FROM USUARIOS WHERE EMAIL = (?)",
+            [email],
+            (err, usuarios) => {
+                if (err) rej(err);
+                else res(usuarios);
+            });
+        });
+    }
 
     insereUsuario(usuario) {
         return new Promise((res, rej) => {
@@ -29,10 +36,10 @@ module.exports = class UsuariosDAO {
         })
     }
 
-    alterarUsuario(usuario) {
+    alterarUsuario(email, body) {
         return new Promise((res, rej) => {
-            this.bd.run('UPDATE USUARIOS SET (NOME, EMAIL, SENHA) = (?, ?, ?) WHERE (NOME, EMAIL SENHA) = (?, ?, ?)'
-            , [usuario.nome, usuario.email, usuario.senha]
+            this.bd.run('UPDATE USUARIOS SET NOME = (?), SENHA = (?) WHERE EMAIL = (?)'
+            , [body.nome, body.email, email]
             , (err) => {
                 if(err) rej('Falha ao alterar o usuário')
                 else res('Usuário alterado com sucesso')
@@ -42,8 +49,8 @@ module.exports = class UsuariosDAO {
 
     deletarUsuario(usuario) {
         return new Promise((res, rej) => {
-            this.bd.run('DELETE FROM USUARIOS WHERE (NOME) = (?)'
-            , [usuario.nome]
+            this.bd.run('DELETE FROM USUARIOS WHERE EMAIL = (?)'
+            , [usuario]
             , (err) => {
                 if(err) rej('Falha ao deletar o usuário')
                 else res('Usuário deletado com sucesso')
