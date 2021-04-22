@@ -4,15 +4,16 @@ module.exports = class UsuariosDAO {
         this.bd = bd;
     }
 
-    listarUsuarios() {
+    async listarUsuarios() {
         return new Promise((res, rej) => {
-            this.bd.all('SELECT * FROM USUARIOS',
+            this.bd.all("SELECT * FROM USUARIOS",
             (err, usuarios) => {
                 if(err) rej(err)
                 else res(usuarios)
             })
-        } 
-    )}
+        })
+        
+    }
 
     listarApenasUmUsuario(email) {
         return new Promise((res, rej) => {

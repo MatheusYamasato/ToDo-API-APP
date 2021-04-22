@@ -5,9 +5,9 @@ function usuarioController(app, bd) {
     
     const DAO = new UsuarioDAO(bd)
     app.get('/usuario', (req, res) => {
-        DAO.listarUsuarios()
-            .then((usuarios) => res.send(usuarios))
-            .catch((err) => res.send(`Erro: ${err} na consulta`))
+        DAO.listarTarefas()
+            .then((tarefas) => res.send(tarefas))
+            .catch((err) => res.send(err))
     })
 
     app.get('/usuario/:email', (req, res) => {
